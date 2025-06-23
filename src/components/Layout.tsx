@@ -1,7 +1,7 @@
 // src/components/Layout.tsx
 import { Outlet, useLocation } from "react-router-dom"
 import Navbar from "./Navbar"
-import BuscadorDeViajes from "./BuscadorDeViajes"
+import BuscadorDeViajes from "./Buscador/BuscadorDeViajes"
 import Footer from "./Footer" // ✅ Asegúrate de tenerlo creado e importado
 
 const Layout = () => {
