@@ -1,12 +1,13 @@
 // src/components/Layout.tsx
 import { Outlet, useLocation } from "react-router-dom"
 import Navbar from "./Navbar"
-import BuscadorDeViajes from "./BuscadorDeViajes" // ahora correctamente importado
+import BuscadorDeViajes from "./BuscadorDeViajes"
+import Footer from "./Footer" // ✅ Asegúrate de tenerlo creado e importado
 
 const Layout = () => {
   const location = useLocation()
 
-  // Mostrar el buscador solo si estamos en la página principal ("/")
+  // Mostrar el buscador solo en la página principal
   const mostrarBuscador = location.pathname === "/"
 
   return (
@@ -14,17 +15,20 @@ const Layout = () => {
       {/* Siempre mostramos la navbar */}
       <Navbar />
 
-      {/* Mostrar el formulario solo en la ruta principal */}
+      {/* Buscador de viajes solo en "/" */}
       {mostrarBuscador && (
         <div className="bg-gray-100 p-4">
           <BuscadorDeViajes />
         </div>
       )}
 
-      {/* Renderiza el contenido dinámico de cada ruta */}
+      {/* Contenido dinámico */}
       <main className="flex-grow">
         <Outlet />
       </main>
+
+      {/* Footer visible en todas las rutas */}
+      <Footer />
     </div>
   )
 }
