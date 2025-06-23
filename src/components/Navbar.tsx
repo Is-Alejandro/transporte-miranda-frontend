@@ -5,22 +5,22 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 
 function Navbar() {
   return (
-    <Disclosure as="nav" className="bg-cyan-500 sticky top-0 z-50 shadow-md">
+    <Disclosure as="nav" className="bg-primary-dark sticky top-0 z-50 shadow-md">
       {({ open }) => (
         <>
-          {/* Contenedor superior del navbar */}
-          <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
-            {/* Logo y nombre */}
-            <Link to="/" className="flex items-center gap-2 text-white">
+          {/* Barra superior: logo y navegación */}
+          <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between text-white font-medium">
+            {/* Logo + texto */}
+            <Link to="/" className="flex items-center gap-2">
               <img src="/Logo1.png" alt="Logo" className="h-10 w-auto" />
               <span className="font-bold text-lg hidden sm:inline">Transporte Miranda</span>
             </Link>
 
-            {/* Menú visible en pantallas grandes */}
-            <div className="hidden md:flex items-center space-x-6 text-white text-sm font-medium">
-              <Link to="/" className="hover:text-yellow-300">Inicio</Link>
-              <Link to="/mis-viajes" className="hover:text-yellow-300">Mis viajes</Link>
-              <Link to="/encomiendas" className="hover:text-yellow-300">Encomiendas</Link>
+            {/* Menú horizontal para pantallas grandes */}
+            <div className="hidden md:flex items-center space-x-6 text-sm">
+              <Link to="/" className="hover:text-accent">Inicio</Link>
+              <Link to="/mis-viajes" className="hover:text-accent">Mis viajes</Link>
+              <Link to="/encomiendas" className="hover:text-accent">Encomiendas</Link>
               <div className="flex items-center gap-1 cursor-pointer">
                 <span className="text-lg">🌐</span><span>ES</span>
               </div>
@@ -30,9 +30,9 @@ function Navbar() {
               <div className="text-xl cursor-pointer">👤</div>
             </div>
 
-            {/* Botón hamburguesa en móviles */}
+            {/* Botón hamburguesa visible solo en móviles */}
             <div className="md:hidden">
-              <Disclosure.Button className="inline-flex items-center justify-center rounded-md text-white hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-white">
+              <Disclosure.Button className="inline-flex items-center justify-center rounded-md text-white hover:text-accent focus:outline-none focus:ring-2 focus:ring-white">
                 {open ? (
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                 ) : (
@@ -42,7 +42,7 @@ function Navbar() {
             </div>
           </div>
 
-          {/* Overlay + panel deslizante solo si el menú está abierto */}
+          {/* Panel deslizante en móviles + fondo oscuro desenfocado */}
           <Transition show={open}>
             <Transition.Child
               as="div"
@@ -64,21 +64,21 @@ function Navbar() {
               leave="transition transform duration-300"
               leaveFrom="translate-x-0"
               leaveTo="translate-x-full"
-              className="fixed top-[64px] right-0 w-64 h-[calc(100%-64px)] bg-white text-gray-900 z-50 shadow-lg md:hidden"
+              className="fixed top-[64px] right-0 w-64 h-[calc(100%-64px)] bg-white text-text-dark z-50 shadow-lg md:hidden"
             >
               <div className="p-4">
-                {/* Logo dentro del menú móvil */}
+                {/* Logo dentro del panel móvil */}
                 <div className="flex items-center gap-2 mb-6">
                   <img src="/Logo1.png" alt="Logo" className="h-10 w-auto" />
                   <span className="font-bold text-lg">Transporte Miranda</span>
                 </div>
 
-                {/* Menú del panel lateral */}
+                {/* Menú vertical */}
                 <div className="flex flex-col space-y-4 text-sm font-medium">
-                  <Link to="/" className="hover:text-cyan-500">Inicio</Link>
-                  <Link to="/mis-viajes" className="hover:text-cyan-500">Mis viajes</Link>
-                  <Link to="/encomiendas" className="hover:text-cyan-500">Encomiendas</Link>
-                  <span className="pt-2 border-t border-gray-200"></span>
+                  <Link to="/" className="hover:text-accent">Inicio</Link>
+                  <Link to="/mis-viajes" className="hover:text-accent">Mis viajes</Link>
+                  <Link to="/encomiendas" className="hover:text-accent">Encomiendas</Link>
+                  <span className="pt-2 border-t border-gray-light"></span>
                   <div className="flex items-center gap-1">
                     <span className="text-lg">🌐</span><span>ES</span>
                   </div>

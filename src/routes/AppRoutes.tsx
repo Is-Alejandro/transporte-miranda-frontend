@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom"
 import Home from "../pages/Home"
 import Encomiendas from "../pages/Encomiendas"
 import Contacto from "../pages/Contacto"
+import MisViajes from "../pages/MisViajes" // ✅ nueva importación
 import Layout from "../components/Layout"
 
 const AppRoutes = () => {
@@ -11,6 +12,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Layout />}>
         {/* Estas rutas usarán el Layout con navbar */}
         <Route index element={<Home />} />
+        <Route path="mis-viajes" element={<MisViajes />} /> {/* ✅ nueva ruta */}
         <Route path="encomiendas" element={<Encomiendas />} />
         <Route path="contacto" element={<Contacto />} />
       </Route>
