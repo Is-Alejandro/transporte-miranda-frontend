@@ -17,8 +17,8 @@ const Layout = () => {
 
       {/* Buscador de viajes solo en "/" */}
       {mostrarBuscador && (
-        <div className="bg-gray-100 p-4">
-          <BuscadorDeViajes />
+        <div className="bg-white">
+        <BuscadorDeViajes />
         </div>
       )}
 
