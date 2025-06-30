@@ -1,28 +1,23 @@
 // src/components/Layout.tsx
-import { Outlet, useLocation } from "react-router-dom"
-import Navbar from "./Navbar"
-import BuscadorDeViajes from "./Buscador/BuscadorDeViajes"
-import Footer from "./Footer" // ✅ Asegúrate de tenerlo creado e importado
 
+import { Outlet } from "react-router-dom";
+import Navbar from "./Navbar";
+import Footer from "./Footer"; // ✅ Footer global
+
+/**
+ * El Layout define la estructura global de la app
+ * con su Navbar, Footer y espacio dinámico (Outlet)
+ * 
+ * NO debe manejar fondos ni componentes de negocio (como BuscadorDeViajes)
+ * para mantener la arquitectura escalable.
+ */
 const Layout = () => {
-  const location = useLocation()
-
-  // Mostrar el buscador solo en la página principal
-  const mostrarBuscador = location.pathname === "/"
-
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Siempre mostramos la navbar */}
+      {/* Navbar visible en todas las rutas */}
       <Navbar />
 
-      {/* Buscador de viajes solo en "/" */}
-      {mostrarBuscador && (
-        <div className="bg-white">
-        <BuscadorDeViajes />
-        </div>
-      )}
-
-      {/* Contenido dinámico */}
+      {/* Contenido dinámico según la ruta */}
       <main className="flex-grow">
         <Outlet />
       </main>
@@ -30,7 +25,7 @@ const Layout = () => {
       {/* Footer visible en todas las rutas */}
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
