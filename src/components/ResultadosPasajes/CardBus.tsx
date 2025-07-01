@@ -1,8 +1,7 @@
-// Este componente representa visualmente un resultado de bus en forma de tarjeta
-
 import { useState } from "react";
 import PlanoAsientos from "../PlanoAsientos/PlanoAsientos";
 import { asientosSimulados } from "../../data/asientosSimulados";
+import busMiranda from "../../assets/busMiranda.jpg";
 
 interface Bus {
   id: number;
@@ -22,50 +21,75 @@ interface Props {
 }
 
 const CardBus = ({ bus }: Props) => {
-  // Estado para controlar si la tarjeta está expandida
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      {/* Información de la empresa y horario */}
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 flex-1">
-        <div>
-          <p className="text-lg font-bold text-primary">{bus.empresa}</p>
-          <p className="text-sm text-gray-600">{bus.fecha}</p>
+    <div className="bg-white p-4 rounded-xl shadow-md flex flex-col gap-4 text-sm">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        {/* logo + nombre */}
+        <div className="flex items-center gap-2">
+          <img src={busMiranda} alt="Logo Transporte Miranda" className="w-16 h-16 object-contain rounded" />
+          <div className="flex flex-col">
+            <span className="font-semibold">{bus.empresa}</span>
+            <span className="text-xs text-gray-500">BUS CAMA</span>
+          </div>
         </div>
 
-        <div className="text-sm text-gray-700">
-          <p>
-            <span className="font-semibold">Salida:</span> {bus.horaSalida}
-          </p>
-          <p>
-            <span className="font-semibold">Llegada:</span> {bus.horaLlegada}
-          </p>
-          <p>
-            <span className="font-semibold">Duración:</span> {bus.duracion}
-          </p>
+        {/* horario y terminales */}
+        <div className="flex flex-col md:flex-row md:items-center gap-2 flex-1 justify-between">
+          <div className="flex flex-col">
+            <span className="font-bold text-base">{bus.horaSalida}</span>
+            <span className="text-xs text-gray-500">Terminal de salida</span>
+          </div>
+          <div className="text-xs text-gray-600 text-center">
+            {bus.duracion}
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-base">{bus.horaLlegada}</span>
+            <span className="text-xs text-gray-500">Terminal de llegada</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="bg-green-500 text-white px-2 rounded text-xs">5.0</span>
+          </div>
+        </div>
+
+        {/* precio y asientos */}
+        <div className="flex flex-col items-end text-right">
+          <span className="text-xs text-gray-500">Desde</span>
+          <span className="text-base font-bold">S/ {bus.precio}</span>
+          <span className="text-xs text-gray-500">{bus.asientosDisponibles} asientos disponibles</span>
         </div>
       </div>
 
-      {/* Sección del precio y botón de acción */}
-      <div className="flex flex-col items-end gap-2 text-right">
-        <p className="text-lg font-bold text-green-600">S/ {bus.precio}</p>
-        <p className="text-sm text-gray-500">
-          {bus.asientosDisponibles} asientos disponibles
-        </p>
+      {/* iconos de servicios */}
+      <div className="flex items-center gap-2 text-xs text-gray-600 mt-2">
+        🛏️ 160° &bull; 🪑 140° &bull; 🚻 &bull; +12
+        <button className="border border-gray-300 rounded px-2 py-0.5 text-xs hover:bg-gray-100">Reembolsable</button>
+        <button className="border border-gray-300 rounded px-2 py-0.5 text-xs hover:bg-gray-100">Reprogramable</button>
+      </div>
+
+      {/* enlaces */}
+      <div className="flex flex-wrap gap-2 text-xs text-gray-600 border-t pt-2 mt-2">
+        <a href="#" className="hover:underline">Servicios</a> |
+        <a href="#" className="hover:underline">Fotos</a> |
+        <a href="#" className="hover:underline">Terminal de salida y llegada</a> |
+        <a href="#" className="hover:underline">Puntuaciones y comentarios</a> |
+        <a href="#" className="hover:underline">Política de Reserva</a>
+      </div>
+
+      {/* botón */}
+      <div className="text-right mt-2">
         <button
-          className="bg-primary text-white px-4 py-1 rounded-lg hover:bg-primary-dark transition"
           onClick={() => setIsExpanded(!isExpanded)}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
         >
-          {/* Cambia el texto dinámicamente */}
-          {isExpanded ? "Ocultar asientos" : "Ver asientos"}
+          {isExpanded ? "OCULTAR ASIENTOS" : "VER ASIENTOS"}
         </button>
       </div>
 
-      {/* Plano de asientos renderizado condicionalmente */}
+      {/* plano de asientos */}
       {isExpanded && (
-        <div className="w-full mt-4">
-          {/* Este componente modular renderiza la cuadrícula provisional de asientos */}
+        <div className="mt-4 border-t pt-4">
           <PlanoAsientos asientos={asientosSimulados} />
         </div>
       )}
