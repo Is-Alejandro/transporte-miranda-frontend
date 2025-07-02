@@ -12,7 +12,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ResumenBusqueda from "./ResumenBusqueda";
-import CardBus from "../CardBus/index";
+import ListaBuses from "./ListaBuses"; // Nuevo componente modularizado
 import { getBuses } from "../../services/api";
 import type { Bus } from "../../types/Bus";
 import ResumenReserva from "../ResumenReserva"; // Asegúrate de que la ruta sea correcta
@@ -64,19 +64,16 @@ const ResultadosPasajes = () => {
 
       {/* Contenedor general con dos columnas en pantallas grandes */}
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Columna izquierda: resultados */}
+        {/* Columna izquierda: lista de buses (manejada por ListaBuses) */}
         <div className="flex-1 space-y-4">
-          {buses.length > 0 ? (
-            buses.map((bus) => <CardBus key={bus.id} bus={bus} />)
-          ) : (
-            <p className="text-center text-gray-500">No se encontraron buses disponibles.</p>
-          )}
+          <ListaBuses buses={buses} />
         </div>
 
         {/* Columna derecha: resumen de reserva (solo si hay un asiento seleccionado) */}
         <div className="lg:w-80 w-full">
-          {datosReserva.idAsiento && <ResumenReserva />}
+          {datosReserva?.idAsiento && <ResumenReserva />}
         </div>
+
       </div>
     </div>
   );

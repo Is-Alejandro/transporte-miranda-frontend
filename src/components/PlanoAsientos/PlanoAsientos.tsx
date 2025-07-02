@@ -4,50 +4,58 @@
  * Este componente muestra los asientos de un bus en dos pisos.
  * Permite seleccionar un asiento disponible y comunica la selección
  * al contexto global de reserva para que otros componentes puedan usarla.
- *
- * Visualmente usa colores para indicar el estado de cada asiento:
- * - Verde: disponible
- * - Rojo: ocupado
- * - Amarillo: reservado
- * - Celeste (accent): seleccionado
  */
 
-import type { Asiento } from "../../types/Asiento"
-import { useState } from "react"
-import { useReserva } from "../../context/ReservaContext"
+import type { Asiento } from "../../types/Asiento";
+import { useState } from "react";
+import { useReserva } from "../../context/ReservaContext";
 
+// Props del componente: recibe los asientos y los datos del bus actual
 interface PlanoAsientosProps {
-  asientos: Asiento[]
+  asientos: Asiento[];
+  bus: {
+    id: number;
+    origen: string;
+    destino: string;
+    precio: number;
+    empresa: string;
+    horaSalida: string;
+  };
 }
 
-const PlanoAsientos = ({ asientos }: PlanoAsientosProps) => {
-  // Estado para cambiar entre piso 1 y piso 2
-  const [pisoActivo, setPisoActivo] = useState(1)
+const PlanoAsientos = ({ asientos, bus }: PlanoAsientosProps) => {
+  const [pisoActivo, setPisoActivo] = useState(1);
 
-  // Obtener los datos actuales de reserva y la función para seleccionar asiento
-  const { datosReserva, seleccionarAsiento } = useReserva()
+  // Usamos el contexto global de reserva actualizado
+  const { datosReserva, seleccionarReserva } = useReserva();
 
-  // Manejar la selección o deselección de un asiento
+  // Lógica para seleccionar o deseleccionar un asiento
   const manejarSeleccion = (asiento: Asiento) => {
-    // Si el asiento está ocupado o reservado, no se puede seleccionar
-    if (asiento.estado === "ocupado" || asiento.estado === "reservado") return
+    if (asiento.estado === "ocupado" || asiento.estado === "reservado") return;
 
-    // Si el asiento ya está seleccionado, se deselecciona
-    if (datosReserva.idAsiento === asiento.id) {
-      seleccionarAsiento("", 0)
+    if (datosReserva?.idAsiento === asiento.id) {
+      seleccionarReserva(null); // Deseleccionar si se hace clic sobre el mismo
     } else {
-      // Selecciona el nuevo asiento
-      seleccionarAsiento(asiento.id, asiento.numero)
+      // Selecciona un nuevo asiento y guarda toda la información necesaria
+      seleccionarReserva({
+        idAsiento: asiento.id,
+        numeroAsiento: asiento.numero,
+        idViaje: bus.id,
+        origen: bus.origen,
+        destino: bus.destino,
+        empresa: bus.empresa,
+        precio: bus.precio,
+        horaSalida: bus.horaSalida,
+      });
     }
-  }
+  };
 
-  // Filtrar asientos del piso activo
-  const asientosFiltrados = asientos.filter((a) => a.piso === pisoActivo)
+  // Filtrar los asientos del piso actualmente seleccionado
+  const asientosFiltrados = asientos.filter((a) => a.piso === pisoActivo);
 
   return (
     <div className="w-full flex flex-col gap-4">
-      
-      {/* Selector de piso (1 o 2) */}
+      {/* Selector de piso */}
       <div className="flex justify-center gap-2 mb-2">
         {[1, 2].map((piso) => (
           <button
@@ -73,13 +81,13 @@ const PlanoAsientos = ({ asientos }: PlanoAsientosProps) => {
       {/* Mapa de asientos */}
       <div className="grid grid-cols-4 gap-2 justify-center mt-4">
         {asientosFiltrados.map((asiento) => {
-          const estaSeleccionado = datosReserva.idAsiento === asiento.id
+          const estaSeleccionado = datosReserva?.idAsiento === asiento.id;
 
-          let color = ""
-          if (asiento.estado === "ocupado") color = "bg-red-500"
-          else if (asiento.estado === "reservado") color = "bg-yellow-500"
-          else if (estaSeleccionado) color = "bg-accent"
-          else color = "bg-green-500"
+          let color = "";
+          if (asiento.estado === "ocupado") color = "bg-red-500";
+          else if (asiento.estado === "reservado") color = "bg-yellow-500";
+          else if (estaSeleccionado) color = "bg-accent";
+          else color = "bg-green-500";
 
           return (
             <div
@@ -89,19 +97,19 @@ const PlanoAsientos = ({ asientos }: PlanoAsientosProps) => {
             >
               {asiento.numero}
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-// Subcomponente para la leyenda de colores
+// Subcomponente para mostrar la leyenda de estados
 const Leyenda = ({ color, texto }: { color: string; texto: string }) => (
   <div className="flex items-center gap-1">
     <div className={`w-4 h-4 rounded ${color}`} />
     {texto}
   </div>
-)
+);
 
-export default PlanoAsientos
+export default PlanoAsientos;

@@ -1,32 +1,45 @@
 /**
  * ResumenReserva.tsx
- * 
+ *
  * Este componente muestra un resumen visual de la reserva actual.
  * Incluye:
- * - El número de asiento seleccionado
- * - El ID del viaje (o más datos si los tuvieras)
- * - El precio del pasaje
- * - Un botón "Continuar" que solo se activa si hay un asiento seleccionado
- * 
- * Más adelante, este componente puede redirigir al formulario de pasajero
- * o a la pantalla de confirmación/pago.
+ * - Detalles del asiento y viaje seleccionados
+ * - Validación para activar/desactivar el botón de "Continuar"
+ * - Escalable para agregar navegación al siguiente paso
  */
 
-import { useReserva } from "../../context/ReservaContext"
+import { useReserva } from "../../context/ReservaContext";
 
 const ResumenReserva = () => {
-  const { datosReserva } = useReserva()
+  const { datosReserva } = useReserva();
 
-  const { idViaje, idAsiento, numeroAsiento, precio } = datosReserva
+  // Validación: si no hay datos de reserva aún
+  if (!datosReserva) {
+    return null;
+  }
 
-  const puedeContinuar = idAsiento !== null && idViaje !== null
+  const {
+    idViaje,
+    idAsiento,
+    numeroAsiento,
+    precio,
+    empresa,
+    origen,
+    destino,
+    horaSalida
+  } = datosReserva;
+
+  const puedeContinuar = idAsiento !== null && idViaje !== null;
 
   return (
     <div className="bg-white shadow-lg rounded-xl p-6 space-y-4 w-full max-w-md mx-auto">
       <h2 className="text-xl font-bold text-primary">Resumen de tu reserva</h2>
 
       <div className="text-sm space-y-2 text-gray-800">
-        <p><strong>Viaje ID:</strong> {idViaje ?? "No seleccionado"}</p>
+        <p><strong>Empresa:</strong> {empresa ?? "No disponible"}</p>
+        <p><strong>Origen:</strong> {origen ?? "No disponible"}</p>
+        <p><strong>Destino:</strong> {destino ?? "No disponible"}</p>
+        <p><strong>Hora de salida:</strong> {horaSalida ?? "No disponible"}</p>
         <p><strong>Asiento:</strong> {numeroAsiento ?? "No seleccionado"}</p>
         <p><strong>Precio:</strong> {precio ? `S/ ${precio}` : "No disponible"}</p>
       </div>
@@ -37,14 +50,14 @@ const ResumenReserva = () => {
         }`}
         disabled={!puedeContinuar}
         onClick={() => {
-          // Aquí irá la navegación al siguiente paso (ej. confirmación)
-          alert("Reserva lista para continuar 🚀 (simulado)")
+          // Aquí irá la navegación real al siguiente paso (formulario o pago)
+          alert("Reserva lista para continuar 🚀 (simulado)");
         }}
       >
         Continuar
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ResumenReserva
+export default ResumenReserva;
