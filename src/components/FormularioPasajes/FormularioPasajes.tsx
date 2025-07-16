@@ -6,17 +6,34 @@ import CampoSelectDestino from "./CampoSelectDestino";
 import CampoFecha from "./CampoFecha";
 import BotonBuscar from "./BotonBuscar";
 
-const FormularioPasajes = () => {
+// ✅ Definimos el tipo de props que recibe este componente
+interface FormularioPasajesProps {
+  /**
+   * 🔍 Función para buscar viajes en el backend
+   * @param origen - ciudad de origen
+   * @param destino - ciudad de destino
+   * @param fecha - fecha en formato YYYY-MM-DD
+   */
+  onBuscar: (origen: string, destino: string, fecha: string) => Promise<void>;
+}
+
+const FormularioPasajes: React.FC<FormularioPasajesProps> = ({ onBuscar }) => {
   const navigate = useNavigate();
 
+  // 🎯 Estados para capturar la búsqueda del usuario
   const [origen, setOrigen] = useState("");
   const [destino, setDestino] = useState("");
   const [fechaIda, setFechaIda] = useState("");
   const [fechaRetorno, setFechaRetorno] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /**
+   * 🚀 handleSubmit
+   * Maneja el envío del formulario y llama al backend
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // ✅ Validaciones básicas
     if (!origen || !destino || !fechaIda) {
       alert("Por favor, completa origen, destino y fecha de ida.");
       return;
@@ -27,14 +44,24 @@ const FormularioPasajes = () => {
       return;
     }
 
-    localStorage.setItem(
-      "busquedaPasajes",
-      JSON.stringify({ origen, destino, fechaIda, fechaRetorno })
-    );
+    try {
+      // ✅ Llamada al backend para buscar viajes
+      await onBuscar(origen, destino, fechaIda);
 
-    navigate("/resultados", {
-      state: { origen, destino, fechaIda, fechaRetorno },
-    });
+      // 💾 Guardar búsqueda en localStorage (opcional)
+      localStorage.setItem(
+        "busquedaPasajes",
+        JSON.stringify({ origen, destino, fechaIda, fechaRetorno })
+      );
+
+      // 🌐 Navegar a la página de resultados
+      navigate("/resultados", {
+        state: { origen, destino, fechaIda, fechaRetorno },
+      });
+    } catch (error) {
+      console.error("❌ Error al buscar viajes:", error);
+      alert("Hubo un problema al buscar los viajes. Intenta de nuevo.");
+    }
   };
 
   return (
