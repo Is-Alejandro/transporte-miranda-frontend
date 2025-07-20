@@ -1,76 +1,78 @@
 /**
  * CardBus/index.tsx
  *
- * Este componente representa una tarjeta individual de bus en los resultados de búsqueda.
- * Recibe props externas para:
- * - Mostrar/ocultar el plano de asientos (ya no usa estado interno)
- * - Ejecutar acciones personalizadas al hacer clic en "Ver asientos" o "Ocultar"
- *
- * Ventajas:
- * - Código más limpio y desacoplado
- * - Permite que el componente padre controle el comportamiento global
- * - Conserva la estructura y estilos responsivos
+ * Muestra la tarjeta de un viaje con origen, destino, horarios y bus asignado.
+ * Adaptado para trabajar con el modelo Viaje (backend).
  */
 
 import PlanoAsientos from "../PlanoAsientos/PlanoAsientos";
-import { asientosSimulados } from "../../data/asientosSimulados";
 
-// Subcomponentes del CardBus
+// Subcomponentes del CardBus (maquetas por ahora)
 import BusInfo from "./BusInfo";
 import BusServicios from "./BusServicios";
 import BusLinks from "./BusLinks";
 import BotonPlanoAsientos from "./BotonPlanoAsientos";
 
-// Interface que describe los datos que recibimos del bus
-interface Bus {
-  id: number;
-  empresa: string;
-  horaSalida: string;
-  horaLlegada: string;
-  duracion: string;
-  precio: number;
-  origen: string;
-  destino: string;
-  fecha: string;
-  asientosDisponibles: number;
-}
+// ✅ Importamos el tipo Viaje desde el backend
+import type { Viaje } from "../../types/Viaje";
 
 // Props del componente
 interface Props {
-  bus: Bus;                          // Datos del bus a mostrar
-  expandido?: boolean;              // Indica si mostrar el plano de asientos
-  onVerAsientos?: () => void;      // Acción al hacer clic en "Ver asientos"
-  onOcultar?: () => void;          // Acción al hacer clic en "Ocultar"
+  viaje: Viaje;                      // Datos del viaje a mostrar
+  expandido?: boolean;               // Indica si mostrar el plano de asientos
+  onVerAsientos?: () => void;        // Acción al hacer clic en "Ver asientos"
+  onOcultar?: () => void;            // Acción al hacer clic en "Ocultar"
 }
 
 // Componente principal
 const CardBus = ({
-  bus,
-  expandido = false,              // Valor por defecto: no expandido
+  viaje,
+  expandido = false,
   onVerAsientos,
   onOcultar,
 }: Props) => {
+  // 🎯 Extraemos datos necesarios del viaje
+  const { ruta, bus, fecha, horaSalida, horaLlegada, id } = viaje;
+
   return (
     <div className="bg-white p-4 rounded-xl shadow-md flex flex-col gap-4 text-sm">
-      {/* Información del bus (empresa, horarios, precio, etc.) */}
-      <BusInfo bus={bus} />
+      {/* Información del viaje (origen, destino, horarios, bus) */}
+      <BusInfo
+        origen={ruta.origen}
+        destino={ruta.destino}
+        fecha={fecha}
+        horaSalida={horaSalida}
+        horaLlegada={horaLlegada}
+        placaBus={bus.placa}
+        marcaBus={bus.marca}
+      />
 
-      {/* Lista de servicios del bus (íconos o texto) */}
+      {/* Lista de servicios (placeholder por ahora) */}
       <BusServicios />
 
-      {/* Enlaces informativos: fotos, terminales, políticas, etc. */}
+      {/* Enlaces adicionales (placeholder por ahora) */}
       <BusLinks />
 
-      {/* Botón que permite alternar la vista de asientos */}
+      {/* Botón para mostrar/ocultar asientos */}
       <BotonPlanoAsientos
         isExpanded={expandido}
         onToggle={(expandido ? onOcultar : onVerAsientos) ?? (() => {})}
       />
 
-      {/* Plano de asientos (solo se muestra si está expandido) */}
+      {/* Plano de asientos (solo si está expandido) */}
       {expandido && (
         <div className="mt-4 border-t pt-4">
-          <PlanoAsientos asientos={asientosSimulados} bus={bus} />
+          <PlanoAsientos
+            idViaje={id} // ✅ Pasamos el ID del viaje
+            bus={{
+              id: bus.id, // ID del bus físico
+              origen: ruta.origen,
+              destino: ruta.destino,
+              precio: 50, // Cambia a viaje.precio si lo tienes en backend
+              empresa: bus.marca, // Marca del bus como “empresa”
+              horaSalida,
+            }}
+          />
         </div>
       )}
     </div>

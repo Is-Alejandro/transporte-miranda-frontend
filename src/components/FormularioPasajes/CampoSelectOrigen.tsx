@@ -1,10 +1,12 @@
 import { MdLocationOn } from "react-icons/md";
-import { terminales } from "../../data/terminales";
 
 interface Props {
   origen: string;
   setOrigen: (value: string) => void;
 }
+
+// ✅ Terminales reales definidos directamente
+const terminales = ["Lima", "Chimbote"];
 
 const CampoSelectOrigen = ({ origen, setOrigen }: Props) => {
   return (
@@ -22,12 +24,13 @@ const CampoSelectOrigen = ({ origen, setOrigen }: Props) => {
         value={origen}
         onChange={(e) => setOrigen(e.target.value)}
         className="w-full pl-10 py-2 rounded-md bg-white/70 focus:outline-none focus:ring-2 focus:ring-accent"
+        required
       >
-        {/* Placeholder de estilo profesional */}
+        {/* Placeholder */}
         <option value="">Seleccionar origen</option>
         {terminales.map((terminal) => (
-          <option key={terminal.id} value={terminal.nombre}>
-            {terminal.nombre} ({terminal.ciudad})
+          <option key={terminal} value={terminal}>
+            {terminal}
           </option>
         ))}
       </select>

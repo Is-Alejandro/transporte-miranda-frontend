@@ -14,9 +14,9 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
-// Estructura completa de los datos que se guardan durante la reserva
+// ✅ Corregido: idAsiento ahora es number
 export interface DatosReserva {
-  idAsiento: string | null;
+  idAsiento: number | null;        // 🎯 Ahora es number para coincidir con la BD
   numeroAsiento: number | null;
   idViaje: number | null;
   precio: number | null;

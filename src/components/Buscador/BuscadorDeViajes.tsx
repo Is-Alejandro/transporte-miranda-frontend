@@ -85,7 +85,7 @@ const BuscadorDeViajes = () => {
                       className="p-4 bg-white/80 rounded-lg shadow hover:shadow-md transition"
                     >
                       <p className="font-semibold">
-                        {viaje.origen} → {viaje.destino}
+                        {viaje.ruta.origen} → {viaje.ruta.destino}
                       </p>
                       <p>
                         Fecha: {viaje.fecha} | Hora salida: {viaje.horaSalida} | Precio: S/. {viaje.precio}

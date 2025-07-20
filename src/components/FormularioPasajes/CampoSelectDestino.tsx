@@ -1,5 +1,4 @@
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { terminales } from "../../data/terminales";
 
 interface Props {
   destino: string;
@@ -7,7 +6,13 @@ interface Props {
   origen: string;
 }
 
+// ✅ Lista fija de terminales reales
+const terminales = ["Lima", "Chimbote"];
+
 const CampoSelectDestino = ({ destino, setDestino, origen }: Props) => {
+  // Filtrar para evitar que el usuario seleccione el mismo origen
+  const opcionesFiltradas = terminales.filter((t) => t !== origen);
+
   return (
     <div className="relative w-full lg:w-[18%]">
       {/* Label superior tipo Redbus */}
@@ -23,18 +28,17 @@ const CampoSelectDestino = ({ destino, setDestino, origen }: Props) => {
         value={destino}
         onChange={(e) => setDestino(e.target.value)}
         className="w-full pl-10 py-2 rounded-md bg-white/70 focus:outline-none focus:ring-2 focus:ring-accent"
+        required
       >
         {/* Placeholder de estilo profesional */}
         <option value="">Seleccionar destino</option>
 
         {/* Opciones dinámicas excluyendo el mismo origen */}
-        {terminales
-          .filter((terminal) => terminal.nombre !== origen)
-          .map((terminal) => (
-            <option key={terminal.id} value={terminal.nombre}>
-              {terminal.nombre} ({terminal.ciudad})
-            </option>
-          ))}
+        {opcionesFiltradas.map((t) => (
+          <option key={t} value={t}>
+            {t}
+          </option>
+        ))}
       </select>
     </div>
   );
