@@ -1,8 +1,9 @@
 /**
  * PlanoAsientos.tsx
  *
- * 🔥 Ahora solo selecciona el asiento en el frontend.
- * La reserva real se hace al presionar "Continuar" en ResumenReserva.
+ * 🔥 Componente para mostrar el plano de asientos.
+ * ✅ Permite seleccionar un asiento (modo simulado).
+ * ⚠️ La reserva real se hace al presionar "Continuar" en ResumenReserva.
  */
 
 import { useEffect, useState } from "react";
@@ -36,19 +37,19 @@ const PlanoAsientos = ({ idViaje, bus }: PlanoAsientosProps) => {
 
   const { datosReserva, seleccionarReserva } = useReserva();
 
-  // 🔥 Cargar los asientos desde el backend
+  // 🔥 Cargar los asientos desde el backend o simulado
   useEffect(() => {
     const fetchAsientos = async () => {
       try {
         setLoading(true);
         const data = await getAsientosPorViaje(idViaje);
 
-        // ✅ Transformamos los datos para adaptarlos al componente
+        // ✅ Adaptamos la estructura de los asientos
         const asientosTransformados = data.map((item: any) => ({
           id: item.id,
-          idAsiento: item.idAsiento,
-          numero: item.asiento.numero,  // 👈 Sacamos el número del objeto anidado
-          piso: item.asiento.piso || 1, // 👈 Si no tiene piso, default a 1
+          idAsiento: item.idAsiento ?? item.id, // fallback al ID si no viene idAsiento
+          numero: item.numero ?? item.asiento?.numero, // soporte para modo simulado
+          piso: item.piso || item.asiento?.piso || 1,
           estado: item.estado,
         }));
 
@@ -63,11 +64,10 @@ const PlanoAsientos = ({ idViaje, bus }: PlanoAsientosProps) => {
     fetchAsientos();
   }, [idViaje]);
 
-  // ✅ Seleccionar un asiento (sin reservar todavía)
+  // ✅ Seleccionar un asiento (solo visual, no reserva real)
   const manejarSeleccion = (asiento: Asiento) => {
     if (asiento.estado !== "disponible") return;
 
-    // 🎨 Guardamos en el contexto global (para usarlo en ResumenReserva)
     seleccionarReserva({
       idAsiento: asiento.idAsiento,
       numeroAsiento: asiento.numero,
@@ -125,7 +125,7 @@ const PlanoAsientos = ({ idViaje, bus }: PlanoAsientosProps) => {
 
             return (
               <div
-                key={asiento.idAsiento}
+                key={`${asiento.piso}-${asiento.idAsiento}`} // ✅ Clave única por piso + asiento
                 className={`w-12 h-12 rounded flex items-center justify-center text-white cursor-pointer ${color}`}
                 onClick={() => manejarSeleccion(asiento)}
               >
