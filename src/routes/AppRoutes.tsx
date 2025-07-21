@@ -1,40 +1,41 @@
-// src/routes/AppRoutes.tsx
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import Encomiendas from "../pages/Encomiendas";
 import Contacto from "../pages/Contacto";
 import MisViajes from "../pages/MisViajes";
-import Resultados from "../pages/Resultados"; // ✅ Página de resultados
-import DatosPasajero from "../pages/DatosPasajero"; // 👤 Nueva página
-import Pago from "../pages/Pago"; // 💳 Nueva página
+import Resultados from "../pages/Resultados";
+import DatosPasajero from "../pages/DatosPasajero";
+import Pago from "../pages/Pago";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 import Layout from "../components/Layout";
+import RutaPrivada from "./RutaPrivada"; // 🔒 NUEVO
 
-/**
- * 📦 AppRoutes
- * Define todas las rutas de la aplicación con buenas prácticas.
- */
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* ✅ Todas las páginas usan Layout (Navbar + Footer) */}
       <Route path="/" element={<Layout />}>
         {/* 🏠 Página de inicio */}
         <Route index element={<Home />} />
 
-        {/* 📄 Otras páginas */}
+        {/* 📄 Otras páginas públicas */}
         <Route path="mis-viajes" element={<MisViajes />} />
         <Route path="encomiendas" element={<Encomiendas />} />
         <Route path="contacto" element={<Contacto />} />
         <Route path="resultados" element={<Resultados />} />
 
-        {/* 👤 Página de datos del pasajero */}
-        <Route path="datos-pasajero" element={<DatosPasajero />} />
-
-        {/* 💳 Página de pago */}
-        <Route path="pago" element={<Pago />} />
+        {/* 🔒 Rutas privadas */}
+        <Route element={<RutaPrivada />}>
+          <Route path="datos-pasajero" element={<DatosPasajero />} />
+          <Route path="pago" element={<Pago />} />
+        </Route>
       </Route>
 
-      {/* ⚠️ Página 404 (No encontrada) */}
+      {/* 🔑 Autenticación */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* ⚠️ Página 404 */}
       <Route
         path="*"
         element={
